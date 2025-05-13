@@ -6,11 +6,12 @@ A modern web application for predicting plant diseases using machine learning. B
 
 - 🖼️ Image upload for plant disease analysis
 - 📊 Real-time prediction results
+- 📝 Run any single prediction (disease, variety, age) or all at once with the 'All' option
 - 📱 Responsive design for all devices
 - 🎨 Modern UI with shadcn/ui components
 - 🌙 Dark mode support
-- 📝 Prediction history tracking
 - 🗂️ View full prediction history in a beautiful dialog, with each result shown in a card and clear prediction type headers
+- 🧩 When running 'All', see all results grouped together in the UI and in history
 
 ## Tech Stack
 
@@ -67,18 +68,20 @@ The build artifacts will be stored in the `dist/` directory.
 frontend/
 ├── src/
 │   ├── components/
-│   │   └── ui/          # shadcn/ui components
+│   │   └── ui/              # shadcn/ui components
+│   │   └── prediction-card.tsx  # Card for displaying a prediction
+│   │   └── history-dialog.tsx   # Dialog for full history
 │   ├── lib/
-│   │   └── api.ts       # API utility for backend calls
-│   ├── App.tsx          # Main application component
-│   ├── main.tsx         # Application entry point
-│   └── index.css        # Global styles
-├── public/              # Static assets
-├── index.html           # HTML template
-├── package.json         # Project dependencies
-├── tsconfig.json        # TypeScript configuration
-├── vite.config.ts       # Vite configuration
-└── tailwind.config.js   # Tailwind CSS configuration
+│   │   └── api.ts           # API utility for backend calls
+│   ├── App.tsx              # Main application component
+│   ├── main.tsx             # Application entry point
+│   └── index.css            # Global styles
+├── public/                  # Static assets
+├── index.html               # HTML template
+├── package.json             # Project dependencies
+├── tsconfig.json            # TypeScript configuration
+├── vite.config.ts           # Vite configuration
+└── tailwind.config.js       # Tailwind CSS configuration
 ```
 
 ## Available Scripts
