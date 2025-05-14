@@ -7,40 +7,48 @@ import PredictionHistory from "./PredictionHistory";
 import PredictionResults from "./PredictionResults";
 import PredictionTypeSelector from "./PredictionTypeSelector";
 
+// New type for history
+interface PredictionHistoryBatch {
+  files: File[];
+  results: PredictionResult[][];
+}
+
 export default function PredictionFlow() {
   const [selectedType, setSelectedType] = useState<PredictionType>("disease");
-  const [file, setFile] = useState<File | null>(null);
-  const [predictedFile, setPredictedFile] = useState<File | null>(null);
-  const [result, setResult] = useState<
-    PredictionResult | PredictionResult[] | null
-  >(null);
-  const [history, setHistory] = useState<
-    (PredictionResult | PredictionResult[])[]
-  >([]);
+  const [files, setFiles] = useState<File[]>([]);
+  const [predictedFiles, setPredictedFiles] = useState<File[]>([]);
+  const [results, setResults] = useState<PredictionResult[][] | null>(null); // Array of results per file
+  const [history, setHistory] = useState<PredictionHistoryBatch[]>([]); // Array of previous results
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showHistory, setShowHistory] = useState(false);
 
   const handlePredict = async () => {
-    if (!file) return;
+    if (!files.length) return;
     setLoading(true);
     setError(null);
-    setResult(null);
+    setResults(null);
     try {
-      if (selectedType === "all") {
-        const endpoints = ["disease", "variety", "age"] as const;
-        const results = await Promise.all(
-          endpoints.map((type) => predict(type, file))
-        );
-        setResult(results);
-        setHistory((prev) => [results, ...prev]);
-        setPredictedFile(file);
-      } else {
-        const res = await predict(selectedType, file);
-        setResult(res);
-        setHistory((prev) => [res, ...prev]);
-        setPredictedFile(file);
-      }
+      // For each file, run prediction (all or single type)
+      const allResults = await Promise.all(
+        files.map(async (file) => {
+          if (selectedType === "all") {
+            const endpoints = ["disease", "variety", "age"] as const;
+            return await Promise.all(
+              endpoints.map((type) => predict(type, file))
+            );
+          } else {
+            const res = await predict(selectedType, file);
+            return [res];
+          }
+        })
+      );
+      setResults(allResults);
+      setPredictedFiles([...files]);
+      setHistory((prev) => [
+        { files: [...files], results: allResults },
+        ...prev,
+      ]);
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message || "Prediction failed");
@@ -65,20 +73,30 @@ export default function PredictionFlow() {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold">Upload Image</h2>
-          <ImageUploader file={file} setFile={setFile} />
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold">Upload Images</h2>
+            {files.length > 0 && (
+              <button
+                className="py-1 px-3 rounded bg-destructive text-destructive-foreground font-semibold text-sm"
+                onClick={() => setFiles([])}
+                type="button"
+              >
+                Remove All
+              </button>
+            )}
+          </div>
+          <ImageUploader files={files} setFiles={setFiles} />
         </div>
 
         <button
           className="w-full py-2 px-4 rounded bg-primary text-primary-foreground font-semibold disabled:opacity-50"
           onClick={handlePredict}
-          disabled={!file || loading}
+          disabled={!files.length || loading}
         >
           {loading ? "Analyzing..." : `Analyze (${selectedType})`}
         </button>
 
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold">Previous Predictions</h2>
           <PredictionHistory
             history={history}
             onShowFullHistory={() => setShowHistory(true)}
@@ -92,10 +110,10 @@ export default function PredictionFlow() {
         <div className="space-y-4">
           <h2 className="text-lg font-semibold">Results</h2>
           <PredictionResults
-            result={result}
+            results={results}
             loading={loading}
             error={error}
-            file={predictedFile}
+            files={predictedFiles}
           />
         </div>
       </div>

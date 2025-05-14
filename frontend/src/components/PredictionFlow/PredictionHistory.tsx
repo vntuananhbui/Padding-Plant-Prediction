@@ -1,8 +1,4 @@
 import { Button } from "@/components/ui/button";
-import {
-  PredictionCard,
-  getPredictionType,
-} from "@/components/prediction-card";
 
 export type PredictionResult = {
   status: string;
@@ -18,53 +14,38 @@ export type PredictionResult = {
   message: string;
 };
 
+interface PredictionHistoryBatch {
+  files: File[];
+  results: PredictionResult[][];
+}
+
 export default function PredictionHistory({
   history,
   onShowFullHistory,
   disabled,
 }: {
-  history: (PredictionResult | PredictionResult[])[];
+  history: PredictionHistoryBatch[];
   onShowFullHistory: () => void;
   disabled: boolean;
 }) {
   return (
-    <div className="space-y-2">
-      <h4 className="text-sm font-medium">Previous Predictions</h4>
+    <div className="space-y-4">
+      <h4 className="text-lg font-semibold mb-2">Previous Predictions</h4>
       {history.length === 0 ? (
         <p className="text-muted-foreground text-sm">No previous predictions</p>
       ) : (
-        <div className="max-h-48 overflow-y-auto flex flex-col gap-2">
-          {history
-            .slice(0, 5)
-            .map((h, i) =>
-              Array.isArray(h) ? (
-                h.map((item, j) => (
-                  <PredictionCard
-                    key={`${i}-${j}`}
-                    h={item}
-                    idx={history.length - i}
-                    type={getPredictionType(item)}
-                  />
-                ))
-              ) : (
-                <PredictionCard
-                  key={i}
-                  h={h}
-                  idx={history.length - i}
-                  type={getPredictionType(h)}
-                />
-              )
-            )}
-        </div>
+        <div className="space-y-8"></div>
       )}
-      <Button
-        variant="outline"
-        className="w-full mt-2"
-        onClick={onShowFullHistory}
-        disabled={disabled}
-      >
-        View Full History
-      </Button>
+      <div className="pt-2">
+        <Button
+          variant="outline"
+          className="w-full mt-2 text-base font-semibold"
+          onClick={onShowFullHistory}
+          disabled={disabled}
+        >
+          View Full History
+        </Button>
+      </div>
     </div>
   );
 }

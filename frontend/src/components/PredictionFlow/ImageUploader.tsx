@@ -2,23 +2,34 @@ import { useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
+function mergeFiles(existing: File[], incoming: File[]): File[] {
+  const map = new Map(existing.map((f) => [f.name + f.size, f]));
+  for (const file of incoming) {
+    const key = file.name + file.size;
+    if (!map.has(key)) map.set(key, file);
+  }
+  return Array.from(map.values());
+}
+
 export default function ImageUploader({
-  file,
-  setFile,
+  files,
+  setFiles,
 }: {
-  file: File | null;
-  setFile: (f: File | null) => void;
+  files: File[];
+  setFiles: (f: File[]) => void;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      setFile(e.dataTransfer.files[0]);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      setFiles(mergeFiles(files, Array.from(e.dataTransfer.files)));
     }
   };
 
-  const handleRemove = () => setFile(null);
+  const handleRemove = (idx: number) => {
+    setFiles(files.filter((_, i) => i !== idx));
+  };
 
   return (
     <div
@@ -27,25 +38,33 @@ export default function ImageUploader({
       onDrop={handleDrop}
       onDragOver={(e) => e.preventDefault()}
     >
-      {file ? (
+      {files.length > 0 ? (
         <div className="flex flex-col items-center gap-2">
-          <img
-            src={URL.createObjectURL(file)}
-            alt="Preview"
-            className="max-h-48 rounded shadow mb-2"
-          />
-          <div className="flex gap-2">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleRemove();
-              }}
-            >
-              Remove
-            </Button>
-            <span className="text-xs text-muted-foreground">{file.name}</span>
+          <div className="flex flex-wrap gap-4 justify-center">
+            {files.map((file, idx) => (
+              <div key={idx} className="flex flex-col items-center gap-1">
+                <img
+                  src={URL.createObjectURL(file)}
+                  alt={`Preview ${idx + 1}`}
+                  className="max-h-32 rounded shadow mb-1"
+                />
+                <div className="flex gap-2 items-center">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemove(idx);
+                    }}
+                  >
+                    Remove
+                  </Button>
+                  <span className="text-xs text-muted-foreground max-w-[100px] truncate">
+                    {file.name}
+                  </span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       ) : (
@@ -65,7 +84,7 @@ export default function ImageUploader({
             />
           </svg>
           <p className="text-sm text-muted-foreground">
-            Drag and drop your image here, or click to browse
+            Drag and drop your images here, or click to browse
           </p>
         </div>
       )}
@@ -73,9 +92,12 @@ export default function ImageUploader({
         ref={inputRef}
         type="file"
         accept="image/*"
+        multiple
         className="hidden"
         onChange={(e) => {
-          if (e.target.files && e.target.files[0]) setFile(e.target.files[0]);
+          if (e.target.files && e.target.files.length > 0) {
+            setFiles(mergeFiles(files, Array.from(e.target.files)));
+          }
         }}
       />
     </div>

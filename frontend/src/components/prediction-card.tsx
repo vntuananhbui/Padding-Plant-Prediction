@@ -2,7 +2,8 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PredictionType, PredictionResult } from "@/types";
 
-export function getPredictionType(h: PredictionResult): PredictionType {
+export function getPredictionType(h?: PredictionResult): PredictionType {
+  if (!h || !h.result) return "disease";
   if (h.result.disease) return "disease";
   if (h.result.variety) return "variety";
   if (h.result.age_days !== undefined || h.result.age !== undefined)
