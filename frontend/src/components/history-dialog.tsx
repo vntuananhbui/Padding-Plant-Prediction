@@ -6,26 +6,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { PredictionCard, getPredictionType } from "./prediction-card";
-import { PredictionType } from "../App";
-
-type PredictionResult = {
-  status: string;
-  result: {
-    disease?: string;
-    variety?: string;
-    age?: string | number;
-    confidence?: number;
-    is_healthy?: boolean;
-    age_days?: number;
-    [key: string]: unknown;
-  };
-  message: string;
-};
+import { PredictionResult } from "@/types";
 
 type HistoryDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  history: PredictionResult[];
+  history: (PredictionResult | PredictionResult[])[];
 };
 
 export function HistoryDialog({
@@ -49,14 +35,25 @@ export function HistoryDialog({
           <p className="text-muted-foreground text-sm">No predictions yet.</p>
         ) : (
           <div>
-            {history.map((h, i) => (
-              <PredictionCard
-                key={i}
-                h={h}
-                idx={history.length - i}
-                type={getPredictionType(h) as PredictionType}
-              />
-            ))}
+            {history.map((h, i) =>
+              Array.isArray(h) ? (
+                h.map((item, j) => (
+                  <PredictionCard
+                    key={`${i}-${j}`}
+                    h={item}
+                    idx={history.length - i}
+                    type={getPredictionType(item)}
+                  />
+                ))
+              ) : (
+                <PredictionCard
+                  key={i}
+                  h={h}
+                  idx={history.length - i}
+                  type={getPredictionType(h)}
+                />
+              )
+            )}
           </div>
         )}
       </DialogContent>
