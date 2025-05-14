@@ -19,9 +19,9 @@ class PaddyPredictionService:
             
             # Load models
             logger.info("Loading models...")
-            self.disease_model = tf.keras.models.load_model('/Users/macintosh/TA-DOCUMENT/StudyZone/RMIT/2025/Sem_1_2025/MachineLearning/be-ml-final/model/task1_finetuned.keras', compile=False)
-            self.variety_model = tf.keras.models.load_model('model/Task2_Variety_CNN_FineTune_Dropout.keras', compile=False)
-            self.age_model = tf.keras.models.load_model('model/task3_efficient_cnn_BEST.keras', compile=False)
+            self.disease_model = tf.keras.models.load_model('./model/task1_finetuned.keras', compile=False)
+            self.variety_model = tf.keras.models.load_model('./model/Task2_Variety_CNN_FineTune_Dropout.keras', compile=False)
+            self.age_model = tf.keras.models.load_model('./model/task3_efficient_cnn_BEST.keras', compile=False)
             
             # Compile models
             self.disease_model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
@@ -70,7 +70,7 @@ class PaddyPredictionService:
             return {
                 "disease": disease_name,
                 "confidence": confidence,
-                "is_healthy": disease_name == "healthy"
+                "is_healthy": disease_name == "normal"
             }
         except Exception as e:
             logger.error(f"Error predicting disease: {str(e)}")
