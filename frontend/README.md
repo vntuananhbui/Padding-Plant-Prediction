@@ -1,110 +1,79 @@
-# Plant Disease Prediction Frontend
+# Plant Prediction Frontend
 
-A modern web application for predicting plant diseases using machine learning. Built with React, TypeScript, and shadcn/ui.
+A modern, beautiful, and responsive React + TypeScript frontend for Paddy Plant Prediction, featuring image upload, multi-prediction, and rich result/history display.
 
 ## Features
 
-- 🖼️ Image upload for plant disease analysis
-- 📊 Real-time prediction results
-- 📝 Run any single prediction (disease, variety, age) or all at once with the 'All' option
-- 📱 Responsive design for all devices
-- 🎨 Modern UI with shadcn/ui components
-- 🌙 Dark mode support
-- 🗂️ View full prediction history in a beautiful dialog, with each result shown in a card and clear prediction type headers
-- 🧩 When running 'All', see all results grouped together in the UI and in history
+- **React + TypeScript** with Vite for fast development
+- **Tailwind CSS** and **shadcn/ui** for modern, accessible UI
+- **Image upload**: Select or drag-and-drop multiple images
+- **Prediction types**: Disease, Variety, Age, or All (runs all at once)
+- **Batch prediction**: Analyze multiple images in parallel
+- **Beautiful results grid**: Responsive, 2-column layout, each card shows image, health badge, and predictions
+- **Click-to-expand**: Click any result card to view a large image and full prediction details in a dialog
+- **Prediction history**: View previous batches, with image previews and all predictions, both inline and in a modal
+- **Consistent, modern design**: Soft shadows, rounded corners, notification badges, and clear info blocks
+- **Accessible and responsive**: Works great on desktop and mobile
 
 ## Tech Stack
 
-- [React](https://react.dev/) - UI Library
-- [TypeScript](https://www.typescriptlang.org/) - Type Safety
-- [Vite](https://vitejs.dev/) - Build Tool
-- [Tailwind CSS](https://tailwindcss.com/) - Styling
-- [shadcn/ui](https://ui.shadcn.com/) - UI Components
-- [Radix UI](https://www.radix-ui.com/) - Headless UI Components
+- [React](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
+- [Vite](https://vitejs.dev/) (build tool)
+- [Tailwind CSS](https://tailwindcss.com/) (utility-first CSS)
+- [shadcn/ui](https://ui.shadcn.com/) (accessible UI components)
 
-## Getting Started
+## Setup
 
-### Prerequisites
+1. **Install dependencies:**
 
-- Node.js 18.x or later
-- npm 9.x or later
+   ```bash
+   cd frontend
+   npm install
+   # or
+   yarn install
+   ```
 
-### Installation
+2. **Start the dev server:**
 
-1. Clone the repository:
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
 
-```bash
-git clone <repository-url>
-cd frontend
-```
+3. **Configure API endpoint:**
+   - By default, the frontend expects the backend API at `/predict/...`.
+   - If your backend runs elsewhere, update the API base URL in `src/lib/api.ts`.
 
-2. Install dependencies:
+## Usage
 
-```bash
-npm install
-```
+1. **Select prediction type** (Disease, Variety, Age, or All).
+2. **Upload one or more images** (drag-and-drop or file picker).
+3. **Click "Analyze"** to run predictions. Results appear in a responsive grid.
+4. **Click any result card** to view a large image and detailed predictions in a dialog.
+5. **View previous predictions** in the "Previous Predictions" section or open the full history modal.
 
-3. Start the development server:
+## UI/UX Highlights
 
-```bash
-npm run dev
-```
-
-The application will be available at `http://localhost:5173`
-
-### Building for Production
-
-To create a production build:
-
-```bash
-npm run build
-```
-
-The build artifacts will be stored in the `dist/` directory.
+- **Results grid**: 2 columns, each card with image, health badge, and predictions
+- **Dialog**: Full image on the right, all predictions on the left
+- **History**: Modern, compact, and visually grouped by batch and image
+- **Accessible**: Keyboard navigation, focus rings, and responsive design
 
 ## Project Structure
 
-```
-frontend/
-├── src/
-│   ├── components/
-│   │   └── ui/              # shadcn/ui components
-│   │   └── prediction-card.tsx  # Card for displaying a prediction
-│   │   └── history-dialog.tsx   # Dialog for full history
-│   ├── lib/
-│   │   └── api.ts           # API utility for backend calls
-│   ├── App.tsx              # Main application component
-│   ├── main.tsx             # Application entry point
-│   └── index.css            # Global styles
-├── public/                  # Static assets
-├── index.html               # HTML template
-├── package.json             # Project dependencies
-├── tsconfig.json            # TypeScript configuration
-├── vite.config.ts           # Vite configuration
-└── tailwind.config.js       # Tailwind CSS configuration
-```
+- `src/components/PredictionFlow/` — Main workflow and UI components
+- `src/components/prediction-card.tsx` — Card UI for history and modular prediction display
+- `src/components/history-dialog.tsx` — Full history modal
+- `src/lib/api.ts` — API utility for backend communication
+- `src/types/` — Shared TypeScript types
 
-## Available Scripts
+## Customization
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
+- **Styling**: Tweak Tailwind classes in components for your brand/colors
+- **API**: Update `src/lib/api.ts` for custom endpoints or auth
+- **UI**: Add more info, actions, or polish as needed
 
-## Contributing
+---
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgments
-
-- [shadcn/ui](https://ui.shadcn.com/) for the beautiful UI components
-- [Tailwind CSS](https://tailwindcss.com/) for the utility-first CSS framework
-- [Vite](https://vitejs.dev/) for the blazing fast build tool
+**Built with ❤️ by your team and shadcn/ui.**
