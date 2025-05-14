@@ -70,7 +70,7 @@ class PaddyPredictionService:
             return {
                 "disease": disease_name,
                 "confidence": confidence,
-                "is_healthy": disease_name == "healthy"
+                "is_healthy": disease_name == "normal"
             }
         except Exception as e:
             logger.error(f"Error predicting disease: {str(e)}")
